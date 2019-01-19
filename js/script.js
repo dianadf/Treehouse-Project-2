@@ -3,90 +3,76 @@ Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
    
-// Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
 
-/*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
-***/
 
-
+// Variable student-item is for each student on the list of students.
+// Get the elements to work with
 var list = document.getElementsByClassName("student-item");
 
-//console.log(list);
 
-//console.log('list.length', list.length);
+//Hide all elements on the page
 for(i=0;i<list.length;i++) {
    list[i].hidden = true;
 }
-//list.hidden = true;
 
 
 
-/*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
-
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
-***/
-
+//Shows ten items per page
 const showPage = function(page) {
    var students_per_page = 10;
+   //calculate start and end index
    var firstStudentIndex = (page * students_per_page) - 10;
    var lastStudentIndex = firstStudentIndex + 9;
+   //Hide all elements on the page
    for(i=0;i<list.length;i++) {
       list[i].hidden = true;
    }
    for (var i = 0; i < list.length; i++) {
-      //console.log(list[i]);
+   //If index i is in range, show element
       if (i >= firstStudentIndex && i <= lastStudentIndex){
          list[i].hidden = false;
       }
    }
 }
 
-
+//Default to page 1
 showPage(1);
 
 
 
-/*** 
-   Create the `appendPageLinks function` to generate, append, and add 
-   functionality to the pagination buttons.
-***/
-
 function appendPageLinks() {
+   //Calculate number of pages
    var numPages = Math.ceil(list.length/10);
+   var listContainer = document.createElement('ul');
    for (i = 1; i <=numPages; i++) {
+      //Create all the elements
+      var listItem = document.createElement('li');
       var elem = document.createElement('a');
       var linkText = document.createTextNode(i);
       elem.appendChild(linkText);
+      elem.href = '#';
       elem.addEventListener('click', (function(i) {
          return function(){
            showPage(i);
+           //Set active class based on the page
+           var a = document.getElementById('pageLength').getElementsByTagName('a');
+           for(var j=0; j< a.length; j++) {
+              if(j == i-1) {
+                 a[j].className = 'active';
+              } else {
+                 a[j].className = '';
+              }
+           }
          }
       })(i))
-      document.getElementById("pageLength").appendChild(elem);
+      listItem.appendChild(elem);
+      listContainer.appendChild(listItem);
    }
+   document.getElementById("pageLength").appendChild(listContainer);
 };
 appendPageLinks();
 
 
 
 
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
